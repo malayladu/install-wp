@@ -1,6 +1,6 @@
 #!/bin/bash -e 
 
-# Version 1.0
+# Version 1.1
 clear
 
 echo "============================================"
@@ -12,6 +12,8 @@ echo "Database User: "
 read -e dbuser
 echo "Database Password: "
 read -s dbpass
+echo "Do you want to create WordPress MultiSite installation? (y/n)"
+read -e multisite
 echo "run install? (y/n)"
 read -e run
 if [ "$run" == n ] ; then
@@ -49,10 +51,14 @@ echo "Admin Email: "
 read -e email
 
 # Install WordPress
-wp core install --url="$url" --title="$title" --admin_user="$adminUser" --admin_password="$adminPassword" --admin_email="$email"
+if [ "$multisite" == y ] ; then
+    wp core multisite-install --url="$url" --title="$title" --admin_user="$adminUser" --admin_password="$adminPassword" --admin_email="$email"
+else
+    wp core install --url="$url" --title="$title" --admin_user="$adminUser" --admin_password="$adminPassword" --admin_email="$email"
+fi    
 
 # Install & Activate Plugins
-declare -a plugins=("temporary-login-without-password" "icegram" "email-subscribers" "icegram-rainmaker" "smart-manager-for-wp-e-commerce" )
+declare -a plugins=("temporary-login-without-password" "icegram")
 for i in "${plugins[@]}"
 do
    echo "installing $i"
@@ -60,13 +66,12 @@ do
 done
 
 # Install & Activate Themes
-declare -a themes=("eleganto")
+declare -a themes=("")
 for i in "${themes[@]}"
 do
    echo "installing $i" 
    wp theme install "$i" --activate
 done
-
 
 echo "========================="
 echo "Installation is complete."
