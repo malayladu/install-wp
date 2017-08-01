@@ -1,6 +1,6 @@
 # install-wp.sh
 
-It's a shell script to setup WordPress along with plugins and themes in less than a minute.
+It is a shell script to setup WordPress along with plugins and themes in less than a minute.
 
 To use this script, one have a WP-CLI installed on their machine.
 
